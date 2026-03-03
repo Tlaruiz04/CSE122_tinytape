@@ -15,33 +15,39 @@ module tt_um_example (
     input  wire       clk,      // clock
     input  wire       rst_n     // reset_n - low to reset
 );
+//3-bit ALU
+  //input a and b, with select bit op (operation); 
+  wire [2:0] a  = ui_in[2:0];
+  wire [2:0] b  = ui_in[5:3];
+  wire [1:0] op = ui_in[7:6];
 
-  reg [6:0] counter_l;  
-  reg [7:0] count_hundred; 
-  always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin
-      counter_l <= '0;
-      count_hundred <= '0;
-    end else begin
-      if (counter_l == 7'd99) begin 
-        counter_l <= '0; 
-        count_hundred <= count_hundred + 1;
-      end 
-      else begin 
-        counter_l <= counter_l + 1;
+  reg  [2:0] result;
+  reg  carry;
+//always block for ALU computations
+  always @* begin
+    case (op)
+      2'b00: {carry, result} = a + b;
+      2'b01: {carry, result} = a - b;
+      2'b10: begin
+        carry  = 1'b0;
+        result = a & b;
       end
-    end
+      2'b11: begin
+        carry  = 1'b0;
+        result = a ^ b;
+      end
+      default: begin
+        carry  = 1'b0;
+        result = 3'b000;
+      end
+    endcase
   end
-  assign uo_out = count_hundred;
-  
-
-
-  // All output pins must be assigned. If not used, assign to 0.
-  //assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
+//we only care about those bottom 4 bits
+  assign uo_out  = {4'b0000, carry, result};
   assign uio_out = 0;
   assign uio_oe  = 0;
 
   // List all unused inputs to prevent warnings
-  wire _unused = &{ena, uio_in, ui_in,1'b0};
+  wire _unused = &{ena, clk, rst_n, uio_in, 1'b0};
 
 endmodule

@@ -9,11 +9,10 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-My project is a very simple counter project designed for a class. The purpose of my project is to build a counter that counts up every 100 clock cycles, outputting to a 8-bit output. This can then be used to clock other modules, at a much slower pace, which can prove useful when needing a constant clock.
-
+My project is a simple 3-bit ALU that takes in 8 bits on input 3 bits for A, 3 for B, and 2 for select bits, and outputs a value based on the combo of input bits.
 ## How to test
-
-Pretty easy to use, create the module, and it will generate a counter that counts every 100 clock cycles, to test simply check if after 100 cycles the output has increased by 1.
+DISCLAIMER: LLM was used to construct the testbench for this project, it created a testbench that checked if the output incremented every 100 clock cycles. All project.v code is my own.
+The testbnech tests each part of the ALU by creating an ideal model of an ALU and compares my codes output with ideal expected results. To manually test, make sure to drive input to a value with a known output and compare the code with this value.
 
 ## External hardware
 
