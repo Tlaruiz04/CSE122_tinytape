@@ -9,11 +9,11 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-Explain how your project works
+My project is a very simple counter project designed for a class. The purpose of my project is to build a counter that counts up every 100 clock cycles, outputting to a 8-bit output. This can then be used to clock other modules, at a much slower pace, which can prove useful when needing a constant clock.
 
 ## How to test
 
-Explain how to use your project
+Pretty easy to use, create the module, and it will generate a counter that counts every 100 clock cycles, to test simply check if after 100 cycles the output has increased by 1.
 
 ## External hardware
 

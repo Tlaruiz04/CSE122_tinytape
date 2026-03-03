@@ -23,18 +23,26 @@ async def test_project(dut):
     await ClockCycles(dut.clk, 10)
     dut.rst_n.value = 1
 
-    dut._log.info("Test project behavior")
-
-    # Set the input values you want to test
-    dut.ui_in.value = 20
-    dut.uio_in.value = 30
-
-    # Wait for one clock cycle to see the output values
+    # Give one extra cycle after releasing reset
     await ClockCycles(dut.clk, 1)
 
-    # The following assersion is just an example of how to check the output values.
-    # Change it to match the actual expected output of your module:
-    assert dut.uo_out.value == 50
+    dut._log.info("Check counter after reset")
+    # After reset, the slow counter should start at 0
+    assert int(dut.uo_out.value) == 0
 
-    # Keep testing the module by changing the input values, waiting for
-    # one or more clock cycles, and asserting the expected output values.
+    # Now check that uo_out increments every 100 clock cycles
+    dut._log.info("Check that uo_out increments every 100 cycles")
+    expected = 0
+    for _ in range(5):
+        await ClockCycles(dut.clk, 100)
+        expected += 1
+        assert int(dut.uo_out.value) == expected
+
+    # Changing the other inputs should not affect the counter behavior
+    dut._log.info("Change ui_in/uio_in and ensure counter keeps running")
+    dut.ui_in.value = 123
+    dut.uio_in.value = 42
+
+    await ClockCycles(dut.clk, 100)
+    expected += 1
+    assert int(dut.uo_out.value) == expected
